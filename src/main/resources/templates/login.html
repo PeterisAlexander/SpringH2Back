@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Login page</title>
+  </head>
+  <style>
+    html {
+      background-image: linear-gradient(45deg, #3D35DF, #619EF0);
+      background-repeat: no-repeat;
+      width: 100%;
+      height: 100%;
+    }
+    img {
+      border-radius: 25px 0 0 25px;
+      height: 100%;
+      width: 30em;
+    }
+    .container {
+      display: flex;
+      position: absolute;
+      top: 25%;
+      left: 25%;
+      /* align-items: center; */
+      margin: auto;
+      width: min-content;
+      height: min-content;
+      border-radius: 25px;
+      background-color: white;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    }
+    /* .left{
+      display: contents;
+    } */
+    .right {
+      display: flex;
+      flex-direction: column;
+      margin-left: 15px;
+      margin-right: 15px;
+      justify-content: space-evenly;
+    }
+    h1 {
+      font-size: larger;
+      font-family: sans-serif;
+      margin-bottom: 0;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    label {
+      display: block;
+      font-size: unset;
+      font-family: sans-serif;
+      margin-bottom: 5px;
+    }
+    input {
+      width: 225px;
+      height: 30px;
+      border-radius: 10px;
+      border: 1px solid black;
+      padding-left: 15px;
+      margin-bottom: 10px;
+    }
+    input[type="submit"] {
+      cursor: pointer;
+      background-image: linear-gradient(45deg, #3D35DF, #619EF0);
+      color: white;
+      font-size: medium;
+      border: none;
+      width: 100%;
+    }
+    input[type="submit"]:hover {
+      background-image: linear-gradient(275deg, #3D35DF, #619EF0);
+    }
+    .error {
+      display: none;
+      color: red;
+      font-family: sans-serif;
+      font-weight: bold;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+  </style>
+  <body>
+    <div class="container">
+      <div class="left">
+        <img th:src="@{images/inetum.jpg}" alt="inetum">
+      </div>
+      <div class="right">
+        <h1>Login page</h1>
+        <p th:if="${loginError}" class="error">Wrong user or password</p>
+        <!-- <p class="error">Wrong user or password</p> -->
+        <form th:action="@{/login.html}" th:object="" method="post">
+        <!-- <form method="post"> -->
+          <div class="formuser">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" autofocus="autofocus" />
+          </div>
+          <div class="formpassword">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" />
+          </div>
+          <input type="submit" value="Sign in" />
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
