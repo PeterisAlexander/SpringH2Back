@@ -1,32 +1,69 @@
 package com.projet.training.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.projet.training.entities.LoginEntity;
 import com.projet.training.repository.LoginRepository;
+import com.projet.training.services.LoginService;
 
-@Controller
+@RestController
+@RequestMapping("/api")
 public class MyTrainingController {
 	
 	@Autowired
-	LoginRepository loginRepo;
+	private LoginRepository lr;
 	
-	@PostMapping(value="login")
-	public String login(Model model, LoginEntity loginEntity) {
-		loginRepo.save(loginEntity);
-		model.addAttribute("login", new LoginEntity());
-		return "login";
+	@Autowired
+	private LoginService ls;
+	
+	public MyTrainingController(LoginRepository loginRepo) {
+		this.lr = loginRepo;
 	}
 	
-	@GetMapping(value="index")
-	public String index(Model model, LoginEntity loginEntity) {
-		model.addAttribute("login", new LoginEntity());
-		model.addAttribute("logins", loginRepo.findAll());
+	@GetMapping("/users")
+	public Iterable<LoginEntity> listUsers() {
+	    return lr.findAll();
+	}
+	
+	@PostMapping(value="/loginUsername")
+	@CrossOrigin(origins="http://localhost:4200")
+	public LoginEntity loginOrRegister(@RequestBody LoginEntity login) throws Exception {
+		String username = login.getUsername();
+		if(username != null && login.getUsername() != "") {
+			LoginEntity loginObj = ls.fetchLoginByUsername(username);
+			if(loginObj != null) {
+				throw new Exception("User " + username +" is already exist");
+			} else {
+				loginObj = ls.saveLogin(login);
+				return loginObj;
+			}
+		}
 		
-		return "index";
+		LoginEntity loginObj;
+		loginObj = ls.saveLogin(login);
+		return loginObj;
 	}
+	
+	@PostMapping(value="/login")
+	@CrossOrigin(origins="http://localhost:4200")
+	public LoginEntity login(@RequestBody LoginEntity login) throws Exception {
+		String username = login.getUsername();
+		String password = login.getPassword();
+		if((username != null && password != null) || (username != "" && password != "")) {
+			LoginEntity loginObj = ls.fetchLoginByUsernameAndPassword(username, password);
+			if(loginObj != null) {
+				throw new Exception("Bad credentials");
+			}
+		}
+		LoginEntity loginObj;
+		loginObj = ls.fetchLoginByUsernameAndPassword(username, password);
+		return loginObj;
+	}
+
 }
