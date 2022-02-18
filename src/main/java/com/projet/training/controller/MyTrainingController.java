@@ -26,12 +26,29 @@ public class MyTrainingController {
 		this.lr = loginRepo;
 	}
 	
+	@PostMapping(value="/login")
+	@CrossOrigin(origins="http://localhost:4200")
+	public LoginEntity login(@RequestBody LoginEntity login) throws Exception {
+		String username = login.getUsername();
+		String password = login.getPassword();
+		if((username != null && password != null) || (username != "" && password != "")) {
+			LoginEntity loginObj = ls.fetchLoginByUsernameAndPassword(username, password);
+			if(loginObj == null) {
+				throw new Exception("Bad credentials");
+			}
+		}
+		LoginEntity loginObj;
+		loginObj = ls.fetchLoginByUsernameAndPassword(username, password);
+		return loginObj;
+	}
+	
 	@GetMapping("/users")
+	@CrossOrigin(origins="http://localhost:4200")
 	public Iterable<LoginEntity> listUsers() {
 	    return lr.findAll();
 	}
 	
-	@PostMapping(value="/loginUsername")
+	@PostMapping(value="/createUser")
 	@CrossOrigin(origins="http://localhost:4200")
 	public LoginEntity loginOrRegister(@RequestBody LoginEntity login) throws Exception {
 		String username = login.getUsername();
@@ -50,20 +67,6 @@ public class MyTrainingController {
 		return loginObj;
 	}
 	
-	@PostMapping(value="/login")
-	@CrossOrigin(origins="http://localhost:4200")
-	public LoginEntity login(@RequestBody LoginEntity login) throws Exception {
-		String username = login.getUsername();
-		String password = login.getPassword();
-		if((username != null && password != null) || (username != "" && password != "")) {
-			LoginEntity loginObj = ls.fetchLoginByUsernameAndPassword(username, password);
-			if(loginObj != null) {
-				throw new Exception("Bad credentials");
-			}
-		}
-		LoginEntity loginObj;
-		loginObj = ls.fetchLoginByUsernameAndPassword(username, password);
-		return loginObj;
-	}
+	
 
 }
