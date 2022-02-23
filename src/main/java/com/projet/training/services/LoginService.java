@@ -12,6 +12,8 @@ public class LoginService {
 	@Autowired
 	private LoginRepository lr;
 	
+	public LoginEntity findUser(int id) { return lr.findById(id).get();}
+
 	public LoginEntity saveLogin(LoginEntity login) {
 		return lr.save(login);
 	}

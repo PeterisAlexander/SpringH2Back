@@ -1,5 +1,6 @@
 package com.projet.training.entities;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import javax.persistence.*;
@@ -12,7 +13,7 @@ public class LoginEntity {
 	private String password;
 	private String lastname;
 	private String firstname;
-	private Date birthdate;
+	private LocalDate birthdate;
 	
 	/**
 	 * @param id
@@ -22,7 +23,7 @@ public class LoginEntity {
 	 * @param firstname
 	 * @param birthdate
 	 */
-	public LoginEntity(int id, String username, String password, String lastname, String firstname, Date birthdate) {
+	public LoginEntity(int id, String username, String password, String lastname, String firstname, LocalDate birthdate) {
 		super();
 		this.id = id;
 		this.username = username;
@@ -31,6 +32,7 @@ public class LoginEntity {
 		this.firstname = firstname;
 		this.birthdate = birthdate;
 	}
+	
 
 	public LoginEntity() {}
 
@@ -39,7 +41,8 @@ public class LoginEntity {
 	 */
 	@Id
     @Column(name = "id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.AUTO)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return id;
 	}
@@ -56,6 +59,7 @@ public class LoginEntity {
 	 */
 	@Basic
     @Column(name = "username")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public String getUsername() {
 		return username;
 	}
@@ -122,14 +126,14 @@ public class LoginEntity {
 	 */
 	@Basic
     @Column(name = "birthdate")
-	public Date getBirthdate() {
+	public LocalDate getBirthdate() {
 		return birthdate;
 	}
 
 	/**
 	 * @param date the birthdate to set
 	 */
-	public void setBirthdate(Date date) {
+	public void setBirthdate(LocalDate date) {
 		this.birthdate = date;
 	}
 	
