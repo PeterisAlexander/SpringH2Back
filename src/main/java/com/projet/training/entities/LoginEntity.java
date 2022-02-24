@@ -33,6 +33,22 @@ public class LoginEntity {
 		this.birthdate = birthdate;
 	}
 	
+	/**
+	 * 
+	 * @param id
+	 * @param username
+	 * @param lastname
+	 * @param firstname
+	 * @param birthdate
+	 */
+	public LoginEntity(int id, String username, String lastname, String firstname, LocalDate birthdate) {
+		super();
+		this.id = id;
+		this.username = username;
+		this.lastname = lastname;
+		this.firstname = firstname;
+		this.birthdate = birthdate;
+	}
 
 	public LoginEntity() {}
 
@@ -42,7 +58,6 @@ public class LoginEntity {
 	@Id
     @Column(name = "id", nullable = false)
 	@GeneratedValue(strategy=GenerationType.AUTO)
-    //@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return id;
 	}

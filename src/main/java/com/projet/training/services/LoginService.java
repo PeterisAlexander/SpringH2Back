@@ -51,8 +51,4 @@ public class LoginService {
 		return lr.findByUsername(username);
 	}
 	
-	public LoginEntity fetchLoginByUsernameAndPassword(String username, String password) {
-		return lr.findByUsernameAndPassword(username, password);
-	}
-	
 }

@@ -35,12 +35,11 @@ public class MyTrainingController {
 			throw new Exception("Username and Password are empty");
 		}
 		
-		LoginEntity loginObj = ls.fetchLoginByUsernameAndPassword(username, password);
-		if(loginObj == null) {
-			throw new Exception("Bad credentials");
-		}
+		LoginEntity loginObj = ls.fetchLoginByUsername(username);
+		LoginEntity loginInfo = new LoginEntity(loginObj.getId(), loginObj.getUsername(), loginObj.getLastname(), loginObj.getFirstname(), loginObj.getBirthdate());
+	
 		
-		return loginObj;
+		return loginInfo;
 	}
 	
 	@PostMapping(value="/createUser")
@@ -67,6 +66,7 @@ public class MyTrainingController {
 	public ResponseEntity<ArrayList<LoginEntity>> randomPerson(@RequestParam("nbPerson") Integer nbPerson) {
 		
 		ArrayList<LoginEntity> loginList = new ArrayList<>();	
+		ArrayList<LoginEntity> loginListInfo = new ArrayList<>();	
 		
 		LoginEntity login = new LoginEntity();
 		
@@ -94,9 +94,18 @@ public class MyTrainingController {
 				))
 			);
 			
+			loginListInfo.add(new LoginEntity(
+					i,
+					usernameAndPassword.toLowerCase(),
+					lastname.toUpperCase(),
+					firstname.toLowerCase(),
+					birthdate
+				)
+			);
+			
 		}
 		
-		return ResponseEntity.ok().body(loginList);
+		return ResponseEntity.ok().body(loginListInfo);
 	}
 
 }
