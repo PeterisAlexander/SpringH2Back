@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.projet.training.entities.LoginEntity;
+import com.projet.training.methodes.RandomInformation;
 import com.projet.training.repository.LoginRepository;
 import com.projet.training.services.LoginService;
 
@@ -94,17 +95,17 @@ public class MyTrainingController {
 		LoginEntity login = new LoginEntity();
 		
 		for(int i = 0; i< nbPerson; i++) {
-			String usernameAndPassword = randomString();
-			String firstname = randomString();
-			String lastname = randomString();
-			LocalDate birthdate = randomDate();
+			String usernameAndPassword = RandomInformation.randomString();
+			String firstname = RandomInformation.randomString();
+			String lastname = RandomInformation.randomString();
+			LocalDate birthdate = RandomInformation.randomDate();
 
 			login.setId(i);
 			login.setUsername(usernameAndPassword);
 			login.setPassword(usernameAndPassword);
 			login.setLastname(lastname);
 			login.setFirstname(firstname);
-			login.setBirthdate(randomDate());
+			login.setBirthdate(birthdate);
 			
 			
 			loginList.add(ls.saveLogin(new LoginEntity(
@@ -120,42 +121,6 @@ public class MyTrainingController {
 		}
 		
 		return ResponseEntity.ok().body(loginList);
-	}
-
-	/**
-	 * @return 
-	 */
-	@GetMapping("/randomString")
-	private String randomString() {
-		String abcd = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		String randomString = "";
-		
-		Random rand = new Random();
-		
-		int low = 3;
-		int high = 15;
-		int size = rand.nextInt(high-low) + low;
-		
-		char[] text = new char[size];
-		
-		for(int i = 0; i < size; i++) {
-			text[i] = abcd.charAt(rand.nextInt(abcd.length()));
-		}
-		
-		for(int i = 0; i < text.length; i++) {
-			randomString += text[i];
-		}
-		
-		return randomString;
-	}
-	
-	private LocalDate randomDate() {
-		long start = LocalDate.of(1970, 1, 1).toEpochDay();
-	    long end = LocalDate.of(2000, 1, 1).toEpochDay();
-	    long randomDay = ThreadLocalRandom.current().nextLong(start, end);
-	    LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
-	    
-	    return randomDate;
 	}
 
 }
