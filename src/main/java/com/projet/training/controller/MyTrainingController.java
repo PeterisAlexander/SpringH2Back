@@ -1,7 +1,5 @@
 package com.projet.training.controller;
 
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -9,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,15 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.projet.training.entities.LoginEntity;
 import com.projet.training.methodes.RandomInformation;
-import com.projet.training.repository.LoginRepository;
 import com.projet.training.services.LoginService;
 
 @RestController
 @RequestMapping("/api")
 public class MyTrainingController {
-	
-	@Autowired
-	private LoginRepository lr;
 	
 	@Autowired
 	private LoginService ls;
@@ -49,23 +42,6 @@ public class MyTrainingController {
 		
 		return loginObj;
 	}
-	
-	@GetMapping("/users")
-	@CrossOrigin(origins="http://localhost:4200")
-	public Iterable<LoginEntity> listUsers() {
-	    return lr.findAll();
-	}
-	
-	@GetMapping(value = "/login/{id}", produces = "application/json")
-	@CrossOrigin(origins="http://localhost:4200")
-    public ResponseEntity<LoginEntity> get(@PathVariable int id) {
-        try{
-        	LoginEntity l = ls.findUser(id);
-            return ResponseEntity.ok(l);
-        }catch ( Exception e ){
-            return ResponseEntity.notFound().build();
-        }
-    }
 	
 	@PostMapping(value="/createUser")
 	@CrossOrigin(origins="http://localhost:4200")
