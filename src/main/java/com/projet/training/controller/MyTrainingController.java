@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.projet.training.dto.UserDto;
 import com.projet.training.entities.LoginEntity;
-import com.projet.training.methodes.RandomInformation;
 import com.projet.training.services.LoginService;
+import com.projet.training.utils.RandomInformation;
 
 @RestController
 @RequestMapping("/api")
@@ -36,7 +37,7 @@ public class MyTrainingController {
 		}
 		
 		LoginEntity loginObj = ls.fetchLoginByUsername(username);
-		LoginEntity loginInfo = new LoginEntity(loginObj.getId(), loginObj.getUsername(), loginObj.getLastname(), loginObj.getFirstname(), loginObj.getBirthdate());
+		LoginEntity loginInfo = new LoginEntity(login.getId(), username, password, loginObj.getLogin());
 	
 		
 		return loginInfo;
@@ -52,12 +53,12 @@ public class MyTrainingController {
 		
 		LoginEntity loginObj = ls.fetchLoginByUsername(login.getUsername());
 		
-		loginObj = ls.saveLogin(login);
 		
 		if(loginObj == null) {
 			throw new Exception("Bad credentials");		
 		}
 		
+		loginObj = ls.saveLogin(login);
 		return loginObj;
 	}
 	
@@ -66,46 +67,38 @@ public class MyTrainingController {
 	public ResponseEntity<ArrayList<LoginEntity>> randomPerson(@RequestParam("nbPerson") Integer nbPerson) {
 		
 		ArrayList<LoginEntity> loginList = new ArrayList<>();	
-		ArrayList<LoginEntity> loginListInfo = new ArrayList<>();	
+//		ArrayList<LoginEntity> loginListInfo = new ArrayList<>();	
 		
 		LoginEntity login = new LoginEntity();
+		UserDto user = new UserDto();
+		
+		
 		
 		for(int i = 0; i< nbPerson; i++) {
 			String usernameAndPassword = RandomInformation.randomString();
-			String firstname = RandomInformation.randomString();
-			String lastname = RandomInformation.randomString();
-			LocalDate birthdate = RandomInformation.randomDate();
-
-			login.setId(i);
+			
 			login.setUsername(usernameAndPassword);
 			login.setPassword(usernameAndPassword);
-			login.setLastname(lastname);
-			login.setFirstname(firstname);
-			login.setBirthdate(birthdate);
 			
 			
-			loginList.add(ls.saveLogin(new LoginEntity(
-					i,
-					usernameAndPassword.toLowerCase(),
-					usernameAndPassword.toLowerCase(),
-					lastname.toUpperCase(),
-					firstname.toLowerCase(),
-					birthdate
-				))
+			user.setLastname(RandomInformation.randomString());
+			user.setFirstname(RandomInformation.randomString());
+			user.setBirthdate(RandomInformation.randomDate());
+			
+			LoginEntity loginEntity = new LoginEntity(
+					login.getUsername(),
+					login.getPassword(),
+					UserDto.of(user.getFirstname(), user.getLastname(), user.getBirthdate())
 			);
 			
-			loginListInfo.add(new LoginEntity(
-					i,
-					usernameAndPassword.toLowerCase(),
-					lastname.toUpperCase(),
-					firstname.toLowerCase(),
-					birthdate
-				)
-			);
+			//ls.saveLogin(loginEntity);
+			
+			loginList.add(loginEntity);
+			System.out.println(loginList);
 			
 		}
 		
-		return ResponseEntity.ok().body(loginListInfo);
+		return ResponseEntity.ok().body(loginList);
 	}
 
 }

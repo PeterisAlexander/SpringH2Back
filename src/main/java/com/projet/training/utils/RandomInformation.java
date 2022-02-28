@@ -1,4 +1,4 @@
-package com.projet.training.methodes;
+package com.projet.training.utils;
 
 import java.time.LocalDate;
 import java.util.Random;

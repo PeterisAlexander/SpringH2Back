@@ -15,9 +15,13 @@ public class LoginService {
 	@Autowired
 	private LoginRepository lr;
 	
-	public Iterable<LoginEntity> findAll() { return lr.findAll();}
+	public Iterable<LoginEntity> findAll() { 
+		return lr.findAll();
+	}
 	
-	public LoginEntity findUser(int id) { return lr.findById(id).get();}
+	public LoginEntity findUser(int id) {
+		return lr.findById(id).get();
+	}
 	
 	public void addUser( LoginEntity l ) throws InvalidObjectException {
         lr.save(l);
@@ -33,9 +37,7 @@ public class LoginService {
 
             lExistant.setUsername( l.getUsername() );
             lExistant.setPassword( l.getPassword() );
-            lExistant.setLastname( l.getLastname() );
-            lExistant.setFirstname( l.getFirstname() );
-            lExistant.setBirthdate( l.getBirthdate() );
+            lExistant.setLogin( l.getLogin() );
             lr.save( lExistant );
 
         }catch ( NoSuchElementException e ){
