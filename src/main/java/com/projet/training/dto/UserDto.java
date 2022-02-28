@@ -1,6 +1,8 @@
 package com.projet.training.dto;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -10,21 +12,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
-@Table(name="user", schema="", catalog="")
+import com.projet.training.entities.LoginEntity;
+
 public class UserDto {
-	@Id
-    @Column(name = "userid", nullable = false)
-	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int userid;
 	
-	@Column(name = "lastname")
+	private String username;
+
 	private String lastname;
 	
-	@Column(name = "firstname")
 	private String firstname;
 	
-	@Column(name = "birthdate")
 	private LocalDate birthdate;
 	
 	
@@ -35,12 +33,20 @@ public class UserDto {
 	 * @param firstname
 	 * @param birthdate
 	 */
-	public static UserDto of(String lastname, 
-			String firstname, 
-			LocalDate birthdate) {
-		return new UserDto(lastname, firstname, birthdate);
+	public static UserDto of(LoginEntity login) {
+		return new UserDto(login.getId(),
+				login.getUsername(),
+				login.getLastname(),
+				login.getFirstname(),
+				login.getBirthdate());
 	}
 	
+	
+	public static List<UserDto> of(ArrayList<LoginEntity> loginList){
+		return loginList.stream()
+				.map(UserDto::of)
+				.toList();
+	}
 	
 	/**
 	 * 
@@ -49,8 +55,14 @@ public class UserDto {
 	 * @param firstname
 	 * @param birthdate
 	 */
-	public UserDto(String lastname, String firstname, LocalDate birthdate) {
+	public UserDto(int userid,
+			String username,
+			String lastname,
+			String firstname,
+			LocalDate birthdate) {
 		super();
+		this.userid = userid;
+		this.username = username;
 		this.lastname = lastname;
 		this.firstname = firstname;
 		this.birthdate = birthdate;
@@ -59,6 +71,7 @@ public class UserDto {
 	public UserDto() {
 		
 	}
+	
 
 	/**
 	 * @return the userid
@@ -73,6 +86,23 @@ public class UserDto {
 	public void setId(int userid) {
 		this.userid = userid;
 	}
+	
+
+	/**
+	 * @return the username
+	 */
+	public String getUsername() {
+		return username;
+	}
+
+
+	/**
+	 * @param username the username to set
+	 */
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 
 	/**
 	 * @return the lastname

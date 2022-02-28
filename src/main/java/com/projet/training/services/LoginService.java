@@ -1,11 +1,13 @@
 package com.projet.training.services;
 
 import java.io.InvalidObjectException;
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.projet.training.dto.UserDto;
 import com.projet.training.entities.LoginEntity;
 import com.projet.training.repository.LoginRepository;
 
@@ -23,6 +25,10 @@ public class LoginService {
 		return lr.findById(id).get();
 	}
 	
+	public Iterable<LoginEntity> saveAll(ArrayList<LoginEntity> loginList) {
+		return lr.saveAll(loginList);
+	}
+	
 	public void addUser( LoginEntity l ) throws InvalidObjectException {
         lr.save(l);
     }
@@ -37,7 +43,10 @@ public class LoginService {
 
             lExistant.setUsername( l.getUsername() );
             lExistant.setPassword( l.getPassword() );
-            lExistant.setLogin( l.getLogin() );
+            lExistant.setFirstname( l.getFirstname() );
+            lExistant.setLastname( l.getLastname() );
+            lExistant.setBirthdate( l.getBirthdate() );
+     
             lr.save( lExistant );
 
         }catch ( NoSuchElementException e ){
@@ -45,8 +54,11 @@ public class LoginService {
         }
     }
 
-	public LoginEntity saveLogin(LoginEntity login) {
-		return lr.save(login);
+	public UserDto saveLogin(LoginEntity login) {
+		login = lr.save(login);
+		
+		return UserDto.of(login);
+		
 	}
 	
 	public LoginEntity fetchLoginByUsername(String username) {

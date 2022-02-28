@@ -1,5 +1,7 @@
 package com.projet.training.entities;
 
+import java.time.LocalDate;
+
 import javax.persistence.*;
 import com.projet.training.dto.UserDto;
 
@@ -11,28 +13,20 @@ public class LoginEntity {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private int id;
 	
-	@Column(name = "username")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column()
 	private String username;
 	
-	@Column(name = "password")
+	@Column()
 	private String password;
 	
-	@ManyToOne
-    @JoinColumn(name = "userid")
-	private UserDto user;
+	@Column()
+	private String lastname;
 	
-
-	/**
-	 * @param login
-	 */
-	public LoginEntity(int id, String username, String password, UserDto user) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.user = user;
-	}
+	@Column()
+	private String firstname;
+	
+	@Column()
+	private LocalDate birthdate;
 	
 	
 	/**
@@ -43,19 +37,17 @@ public class LoginEntity {
 	 * @param firstname
 	 * @param birthdate
 	 */
-	public LoginEntity(String username, String password, UserDto user) {
+	public LoginEntity(String username, String password, String lastname, String firstname, LocalDate birthdate) {
 		super();
 		this.username = username;
 		this.password = password;
-		this.user = user;
+		this.lastname = lastname;
+		this.firstname = firstname;
+		this.birthdate = birthdate;
 	}
 
-	
 	public LoginEntity() {}
 
-	
-	
-	
 	/**
 	 * @return the id
 	 */
@@ -100,19 +92,56 @@ public class LoginEntity {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	/**
-	 * @return the loginDto
-	 */
-	public UserDto getLogin() {
-		return user;
-	}
+
 
 	/**
-	 * @param loginDto the loginDto to set
+	 * @return the lastname
 	 */
-	public void setLogin(UserDto user) {
-		this.user = user;
+	public String getLastname() {
+		return lastname;
 	}
+
+
+	/**
+	 * @param lastname the lastname to set
+	 */
+	public void setLastname(String lastname) {
+		this.lastname = lastname;
+	}
+
+
+	/**
+	 * @return the firstname
+	 */
+	public String getFirstname() {
+		return firstname;
+	}
+
+
+	/**
+	 * @param firstname the firstname to set
+	 */
+	public void setFirstname(String firstname) {
+		this.firstname = firstname;
+	}
+
+
+	/**
+	 * @return the birthdate
+	 */
+	public LocalDate getBirthdate() {
+		return birthdate;
+	}
+
+
+	/**
+	 * @param birthdate the birthdate to set
+	 */
+	public void setBirthdate(LocalDate birthdate) {
+		this.birthdate = birthdate;
+	}
+	
+	
+	
 	
 }

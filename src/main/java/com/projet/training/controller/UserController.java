@@ -1,6 +1,7 @@
 package com.projet.training.controller;
 
 import java.io.InvalidObjectException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -18,12 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.projet.training.dto.UserDto;
 import com.projet.training.entities.LoginEntity;
 import com.projet.training.repository.LoginRepository;
 import com.projet.training.services.LoginService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/crud")
 public class UserController {
 	
 	@Autowired
@@ -34,22 +36,24 @@ public class UserController {
 	
 	@GetMapping(value="/user" , consumes = "application/json")
 	@CrossOrigin(origins="http://localhost:4200")
-	public List<LoginEntity> listUser() {
-	    return lr.findAll();
+	public List<UserDto> listUser() {
+		ArrayList<LoginEntity> login = (ArrayList<LoginEntity>) lr.findAll();
+		return UserDto.of(login);
 	}
 
     @GetMapping(value = "/user/{id}", produces = "application/json")
-    public ResponseEntity<LoginEntity> get(@PathVariable int id) {
+    public ResponseEntity<UserDto> get(@PathVariable int id) {
         	LoginEntity l = ls.findUser(id);
-            return ResponseEntity.ok(l);
+        	
+            return ResponseEntity.ok(UserDto.of(l));
     }
 	
     @PostMapping(value="/user" , consumes = "application/json")
-    public ResponseEntity<LoginEntity> add( @RequestBody LoginEntity l ){
+    public ResponseEntity<UserDto> add( @RequestBody LoginEntity l ){
         try{
             ls.addUser( l );
             
-            return ResponseEntity.ok().body(l);
+            return ResponseEntity.ok().body(UserDto.of(l));
 
         }catch ( InvalidObjectException e ){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST , e.getMessage() );
@@ -57,9 +61,10 @@ public class UserController {
     }
 
     @PutMapping(value="/user/{id}" , consumes = "application/json")
-    public void update( @PathVariable int id , @RequestBody LoginEntity l ) throws InvalidObjectException{
+    public ResponseEntity<String> update( @PathVariable int id , @RequestBody LoginEntity l ) throws InvalidObjectException{
         try {
             ls.editUser( id , l );
+            return ResponseEntity.ok().body("Successfully update");
         }
         catch( NoSuchElementException e ) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND , "User introuvable" );

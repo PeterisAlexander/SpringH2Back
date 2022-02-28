@@ -1,7 +1,7 @@
 package com.projet.training.controller;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,25 +27,22 @@ public class MyTrainingController {
 	
 	@PostMapping(value="/login")
 	@CrossOrigin(origins="http://localhost:4200")
-	public LoginEntity login(@RequestBody LoginEntity login) throws Exception {
+	public UserDto login(@RequestBody LoginEntity login) throws Exception {
 		String username = login.getUsername();
-		
 		String password = login.getPassword();
 		
-		if((username == null && password == null) || (username == "" && password == "")) {
+		if((username == null || password == null) || (username == "" || password == "")) {
 			throw new Exception("Username and Password are empty");
 		}
 		
-		LoginEntity loginObj = ls.fetchLoginByUsername(username);
-		LoginEntity loginInfo = new LoginEntity(login.getId(), username, password, loginObj.getLogin());
-	
+		LoginEntity loginObj = ls.fetchLoginByUsername(username);	
 		
-		return loginInfo;
+		return UserDto.of(loginObj);
 	}
 	
 	@PostMapping(value="/createUser")
 	@CrossOrigin(origins="http://localhost:4200")
-	public LoginEntity loginOrRegister(@RequestBody LoginEntity login) throws Exception {
+	public ResponseEntity<String> loginOrRegister(@RequestBody LoginEntity login) throws Exception {
 		
 		if(login.getUsername() == null || login.getUsername() == "") {
 			throw new Exception("User " + login.getUsername() +" is already exist");
@@ -53,52 +50,39 @@ public class MyTrainingController {
 		
 		LoginEntity loginObj = ls.fetchLoginByUsername(login.getUsername());
 		
-		
 		if(loginObj == null) {
-			throw new Exception("Bad credentials");		
+			throw new Exception("Bad credentials");
 		}
 		
-		loginObj = ls.saveLogin(login);
-		return loginObj;
+		ls.saveLogin(login);
+		
+		return ResponseEntity.ok().body("User created");
 	}
 	
 	@GetMapping("/generator")
 	@CrossOrigin(origins="http://localhost:4200")
-	public ResponseEntity<ArrayList<LoginEntity>> randomPerson(@RequestParam("nbPerson") Integer nbPerson) {
+	public ResponseEntity<List<UserDto>> randomPerson(@RequestParam("nbPerson") Integer nbPerson) {
 		
 		ArrayList<LoginEntity> loginList = new ArrayList<>();	
-//		ArrayList<LoginEntity> loginListInfo = new ArrayList<>();	
-		
-		LoginEntity login = new LoginEntity();
-		UserDto user = new UserDto();
-		
-		
 		
 		for(int i = 0; i< nbPerson; i++) {
 			String usernameAndPassword = RandomInformation.randomString();
 			
-			login.setUsername(usernameAndPassword);
-			login.setPassword(usernameAndPassword);
-			
-			
-			user.setLastname(RandomInformation.randomString());
-			user.setFirstname(RandomInformation.randomString());
-			user.setBirthdate(RandomInformation.randomDate());
-			
 			LoginEntity loginEntity = new LoginEntity(
-					login.getUsername(),
-					login.getPassword(),
-					UserDto.of(user.getFirstname(), user.getLastname(), user.getBirthdate())
+					usernameAndPassword,
+					usernameAndPassword,
+					RandomInformation.randomString(),
+					RandomInformation.randomString(),
+					RandomInformation.randomDate()
 			);
 			
-			//ls.saveLogin(loginEntity);
-			
 			loginList.add(loginEntity);
-			System.out.println(loginList);
 			
 		}
 		
-		return ResponseEntity.ok().body(loginList);
+		ls.saveAll(loginList);
+		
+		return ResponseEntity.ok().body(UserDto.of(loginList));
 	}
 
 }
