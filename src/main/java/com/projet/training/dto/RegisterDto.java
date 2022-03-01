@@ -4,20 +4,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.projet.training.entities.UserEntity;
 
-public class UserDto {
-	private int userid;
+public class RegisterDto {
+	private int registerId;
 	
 	private String username;
+	
+	private String password;
 
 	private String lastname;
 	
@@ -26,16 +20,10 @@ public class UserDto {
 	private LocalDate birthdate;
 	
 	
-	/**
-	 * 
-	 * @param userid
-	 * @param lastname
-	 * @param firstname
-	 * @param birthdate
-	 */
-	public static UserDto of(UserEntity login) {
-		return new UserDto(login.getId(),
+	public static RegisterDto of(UserEntity login) {
+		return new RegisterDto(login.getId(),
 				login.getUsername(),
+				login.getPassword(),
 				login.getLastname(),
 				login.getFirstname(),
 				login.getBirthdate());
@@ -49,44 +37,44 @@ public class UserDto {
 	}
 	
 	/**
-	 * 
-	 * @param userid
+	 * @param registerId
+	 * @param username
+	 * @param password
 	 * @param lastname
 	 * @param firstname
 	 * @param birthdate
 	 */
-	public UserDto(int userid,
+	public RegisterDto(int registerId,
 			String username,
+			String password,
 			String lastname,
 			String firstname,
 			LocalDate birthdate) {
 		super();
-		this.userid = userid;
+		this.registerId = registerId;
 		this.username = username;
+		this.password = password;
 		this.lastname = lastname;
 		this.firstname = firstname;
 		this.birthdate = birthdate;
 	}
 
-	public UserDto() {
-		
-	}
-	
 
 	/**
-	 * @return the userid
+	 * @return the registerId
 	 */
-	public int getId() {
-		return userid;
+	public int getRegisterId() {
+		return registerId;
 	}
 
+
 	/**
-	 * @param userid the userid to set
+	 * @param registerId the registerId to set
 	 */
-	public void setId(int userid) {
-		this.userid = userid;
+	public void setRegisterId(int registerId) {
+		this.registerId = registerId;
 	}
-	
+
 
 	/**
 	 * @return the username
@@ -105,11 +93,28 @@ public class UserDto {
 
 
 	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+
+	/**
 	 * @return the lastname
 	 */
 	public String getLastname() {
 		return lastname;
 	}
+
 
 	/**
 	 * @param lastname the lastname to set
@@ -118,12 +123,14 @@ public class UserDto {
 		this.lastname = lastname;
 	}
 
+
 	/**
 	 * @return the firstname
 	 */
 	public String getFirstname() {
 		return firstname;
 	}
+
 
 	/**
 	 * @param firstname the firstname to set
@@ -132,6 +139,7 @@ public class UserDto {
 		this.firstname = firstname;
 	}
 
+
 	/**
 	 * @return the birthdate
 	 */
@@ -139,13 +147,13 @@ public class UserDto {
 		return birthdate;
 	}
 
+
 	/**
 	 * @param birthdate the birthdate to set
 	 */
 	public void setBirthdate(LocalDate birthdate) {
 		this.birthdate = birthdate;
 	}
-	
 	
 	
 }

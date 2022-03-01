@@ -7,8 +7,9 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.projet.training.dto.RegisterDto;
 import com.projet.training.dto.UserDto;
-import com.projet.training.entities.LoginEntity;
+import com.projet.training.entities.UserEntity;
 import com.projet.training.repository.LoginRepository;
 
 @Service
@@ -17,19 +18,19 @@ public class LoginService {
 	@Autowired
 	private LoginRepository lr;
 	
-	public Iterable<LoginEntity> findAll() { 
+	public Iterable<UserEntity> findAll() { 
 		return lr.findAll();
 	}
 	
-	public LoginEntity findUser(int id) {
+	public UserEntity findUser(int id) {
 		return lr.findById(id).get();
 	}
 	
-	public Iterable<LoginEntity> saveAll(ArrayList<LoginEntity> loginList) {
+	public Iterable<UserEntity> saveAll(ArrayList<UserEntity> loginList) {
 		return lr.saveAll(loginList);
 	}
 	
-	public void addUser( LoginEntity l ) throws InvalidObjectException {
+	public void addUser( UserEntity l ) throws InvalidObjectException {
         lr.save(l);
     }
 
@@ -37,9 +38,9 @@ public class LoginService {
         lr.deleteById(id);
     }
 
-    public void editUser( int id , LoginEntity l) throws InvalidObjectException , NoSuchElementException {
+    public void editUser( int id , UserEntity l) throws InvalidObjectException , NoSuchElementException {
         try{
-            LoginEntity lExistant =  lr.findById(id).get();
+            UserEntity lExistant =  lr.findById(id).get();
 
             lExistant.setUsername( l.getUsername() );
             lExistant.setPassword( l.getPassword() );
@@ -54,14 +55,18 @@ public class LoginService {
         }
     }
 
-	public UserDto saveLogin(LoginEntity login) {
-		login = lr.save(login);
+	public UserEntity register(RegisterDto register) {
+		UserEntity login = new UserEntity(register.getUsername(),
+				register.getPassword(),
+				register.getLastname(),
+				register.getFirstname(),
+				register.getBirthdate()
+		);
 		
-		return UserDto.of(login);
-		
+		return lr.save(login);
 	}
 	
-	public LoginEntity fetchLoginByUsername(String username) {
+	public UserEntity fetchLoginByUsername(String username) {
 		return lr.findByUsername(username);
 	}
 	

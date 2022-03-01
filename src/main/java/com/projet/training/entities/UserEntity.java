@@ -7,7 +7,7 @@ import com.projet.training.dto.UserDto;
 
 @Entity
 @Table(name="login", schema="", catalog="")
-public class LoginEntity {
+public class UserEntity {
 	@Id
     @Column(name = "id", nullable = false)
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -37,7 +37,7 @@ public class LoginEntity {
 	 * @param firstname
 	 * @param birthdate
 	 */
-	public LoginEntity(String username, String password, String lastname, String firstname, LocalDate birthdate) {
+	public UserEntity(String username, String password, String lastname, String firstname, LocalDate birthdate) {
 		super();
 		this.username = username;
 		this.password = password;
@@ -46,7 +46,7 @@ public class LoginEntity {
 		this.birthdate = birthdate;
 	}
 
-	public LoginEntity() {}
+	public UserEntity() {}
 
 	/**
 	 * @return the id

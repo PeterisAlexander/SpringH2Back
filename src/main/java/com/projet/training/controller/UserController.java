@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.projet.training.dto.UserDto;
-import com.projet.training.entities.LoginEntity;
+import com.projet.training.entities.UserEntity;
 import com.projet.training.repository.LoginRepository;
 import com.projet.training.services.LoginService;
 
@@ -37,19 +37,20 @@ public class UserController {
 	@GetMapping(value="/user" , consumes = "application/json")
 	@CrossOrigin(origins="http://localhost:4200")
 	public List<UserDto> listUser() {
-		ArrayList<LoginEntity> login = (ArrayList<LoginEntity>) lr.findAll();
+		ArrayList<UserEntity> login = (ArrayList<UserEntity>) lr.findAll();
 		return UserDto.of(login);
 	}
 
     @GetMapping(value = "/user/{id}", produces = "application/json")
     public ResponseEntity<UserDto> get(@PathVariable int id) {
-        	LoginEntity l = ls.findUser(id);
+        	UserEntity l = ls.findUser(id);
         	
             return ResponseEntity.ok(UserDto.of(l));
     }
 	
     @PostMapping(value="/user" , consumes = "application/json")
-    public ResponseEntity<UserDto> add( @RequestBody LoginEntity l ){
+    @CrossOrigin(origins="http://localhost:4200")
+    public ResponseEntity<UserDto> add( @RequestBody UserEntity l ){
         try{
             ls.addUser( l );
             
@@ -61,7 +62,7 @@ public class UserController {
     }
 
     @PutMapping(value="/user/{id}" , consumes = "application/json")
-    public ResponseEntity<String> update( @PathVariable int id , @RequestBody LoginEntity l ) throws InvalidObjectException{
+    public ResponseEntity<String> update( @PathVariable int id , @RequestBody UserEntity l ) throws InvalidObjectException{
         try {
             ls.editUser( id , l );
             return ResponseEntity.ok().body("Successfully update");
