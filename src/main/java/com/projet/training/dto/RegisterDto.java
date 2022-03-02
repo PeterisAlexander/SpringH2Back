@@ -20,22 +20,6 @@ public class RegisterDto {
 	private LocalDate birthdate;
 	
 	
-	public static RegisterDto of(UserEntity login) {
-		return new RegisterDto(login.getId(),
-				login.getUsername(),
-				login.getPassword(),
-				login.getLastname(),
-				login.getFirstname(),
-				login.getBirthdate());
-	}
-	
-	
-	public static List<UserDto> of(ArrayList<UserEntity> loginList){
-		return loginList.stream()
-				.map(UserDto::of)
-				.toList();
-	}
-	
 	/**
 	 * @param registerId
 	 * @param username

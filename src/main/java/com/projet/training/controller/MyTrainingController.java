@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.projet.training.dto.LoginDto;
 import com.projet.training.dto.RegisterDto;
 import com.projet.training.dto.UserDto;
 import com.projet.training.entities.UserEntity;
@@ -28,7 +29,7 @@ public class MyTrainingController {
 	
 	@PostMapping(value="/login")
 	@CrossOrigin(origins="http://localhost:4200")
-	public UserDto login(@RequestBody UserEntity login) throws Exception {
+	public ResponseEntity<String> login(@RequestBody LoginDto login) throws Exception {
 		String username = login.getUsername();
 		String password = login.getPassword();
 		
@@ -36,9 +37,13 @@ public class MyTrainingController {
 			throw new Exception("Username and Password are empty");
 		}
 		
-		UserEntity loginObj = ls.fetchLoginByUsername(username);	
+		UserEntity loginObj = ls.fetchLoginByUsername(username);
 		
-		return UserDto.of(loginObj);
+		if(!(username.equals(loginObj.getUsername()) && password.equals(loginObj.getPassword()))) {
+			return ResponseEntity.ok().body("Username and Password is incorrect");
+		}
+
+		return ResponseEntity.ok().body("Successfully login");
 	}
 	
 	@PostMapping(value="/register")
@@ -51,8 +56,11 @@ public class MyTrainingController {
 		
 		UserEntity loginObj = ls.fetchLoginByUsername(register.getUsername());
 		
-		if(loginObj != null) {
-			throw new Exception("User " + register.getUsername() +" is already exist");
+		if(register.getUsername().equals(loginObj.getUsername())) {
+			return ResponseEntity.ok().body("User " + register.getUsername() +" is already exist");
+		}
+		if(!(register.getUsername().equals(register.getPassword()))) {
+			return ResponseEntity.ok().body("Password must be the same as the username");
 		}
 		
 		ls.register(register);
