@@ -3,6 +3,9 @@ package com.projet.training.entities;
 import java.time.LocalDate;
 
 import javax.persistence.*;
+
+import com.projet.training.dto.RegisterDto;
+import com.projet.training.dto.UpdateDto;
 import com.projet.training.dto.UserDto;
 
 @Entity
@@ -140,8 +143,28 @@ public class UserEntity {
 	public void setBirthdate(LocalDate birthdate) {
 		this.birthdate = birthdate;
 	}
+
+	/**
+	 * 
+	 * @param l
+	 * @return
+	 */
+	public static UserEntity of(RegisterDto l) {
+		return new UserEntity(l.getUsername(), 
+				l.getPassword(), 
+				l.getLastname(), 
+				l.getFirstname(), 
+				l.getBirthdate());
+	}
 	
 	
-	
-	
+	/**
+	 */
+	public static UserEntity of(UpdateDto l) {
+		return new UserEntity(l.getUsername(), 
+				l.getPassword(), 
+				l.getLastname(), 
+				l.getFirstname(), 
+				l.getBirthdate());
+	}
 }

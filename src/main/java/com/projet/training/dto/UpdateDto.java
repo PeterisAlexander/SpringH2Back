@@ -1,14 +1,10 @@
 package com.projet.training.dto;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
-import com.projet.training.entities.UserEntity;
-
-public class RegisterDto {
+public class UpdateDto {
 	
-	private String username;
+private String username;
 	
 	private String password;
 
@@ -18,14 +14,12 @@ public class RegisterDto {
 	
 	private LocalDate birthdate;
 
-
 	/**
 	 * @return the username
 	 */
 	public String getUsername() {
 		return username;
 	}
-
 
 	/**
 	 * @param username the username to set
@@ -34,14 +28,12 @@ public class RegisterDto {
 		this.username = username;
 	}
 
-
 	/**
 	 * @return the password
 	 */
 	public String getPassword() {
 		return password;
 	}
-
 
 	/**
 	 * @param password the password to set
@@ -50,14 +42,12 @@ public class RegisterDto {
 		this.password = password;
 	}
 
-
 	/**
 	 * @return the lastname
 	 */
 	public String getLastname() {
 		return lastname;
 	}
-
 
 	/**
 	 * @param lastname the lastname to set
@@ -66,14 +56,12 @@ public class RegisterDto {
 		this.lastname = lastname;
 	}
 
-
 	/**
 	 * @return the firstname
 	 */
 	public String getFirstname() {
 		return firstname;
 	}
-
 
 	/**
 	 * @param firstname the firstname to set
@@ -82,14 +70,12 @@ public class RegisterDto {
 		this.firstname = firstname;
 	}
 
-
 	/**
 	 * @return the birthdate
 	 */
 	public LocalDate getBirthdate() {
 		return birthdate;
 	}
-
 
 	/**
 	 * @param birthdate the birthdate to set
@@ -99,4 +85,5 @@ public class RegisterDto {
 	}
 	
 	
+
 }

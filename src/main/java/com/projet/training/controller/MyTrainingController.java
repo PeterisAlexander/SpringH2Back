@@ -3,6 +3,9 @@ package com.projet.training.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,14 +36,16 @@ public class MyTrainingController {
 		String username = login.getUsername();
 		String password = login.getPassword();
 		
-		if((username == null || password == null) || (username == "" || password == "")) {
+		if((username == null || password == null) 
+				|| (username == "" || password == "")) {
 			throw new Exception("Username and Password are empty");
 		}
 		
 		UserEntity loginObj = ls.fetchLoginByUsername(username);
 		
-		if(!(username.equals(loginObj.getUsername()) && password.equals(loginObj.getPassword()))) {
-			return ResponseEntity.ok().body("Username and Password is incorrect");
+		if(!password.equals(loginObj.getPassword()) 
+				|| ObjectUtils.allNull(loginObj)) {
+			return ResponseEntity.ok().body("Username or Password is incorrect");
 		}
 
 		return ResponseEntity.ok().body("Successfully login");
@@ -50,7 +55,11 @@ public class MyTrainingController {
 	@CrossOrigin(origins="http://localhost:4200")
 	public ResponseEntity<String> register(@RequestBody RegisterDto register) throws Exception {
 		
-		if(register.getUsername() == null || register.getUsername().equals("")) {			
+		if(StringUtils.isAnyEmpty(register.getUsername(), 
+				register.getPassword(), 
+				register.getFirstname(), 
+				register.getLastname()) 
+				|| register.getBirthdate() == null ) {	
 			throw new Exception("Bad credentials");
 		}
 		

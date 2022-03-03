@@ -1,5 +1,7 @@
 package com.projet.training.dto;
 
+import static java.util.stream.Collectors.toList;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +44,10 @@ public class UserDto {
 	}
 	
 	
-	public static List<UserDto> of(ArrayList<UserEntity> loginList){
+	public static List<UserDto> of(List<UserEntity> loginList){
 		return loginList.stream()
 				.map(UserDto::of)
-				.toList();
+				.collect(toList());
 	}
 	
 	/**

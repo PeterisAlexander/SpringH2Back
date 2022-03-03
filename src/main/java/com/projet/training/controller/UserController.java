@@ -1,5 +1,9 @@
 package com.projet.training.controller;
 
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.isAllEmpty;
+import static org.apache.commons.lang3.StringUtils.isAnyEmpty;
+
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.projet.training.dto.RegisterDto;
+import com.projet.training.dto.UpdateDto;
 import com.projet.training.dto.UserDto;
 import com.projet.training.entities.UserEntity;
 import com.projet.training.repository.LoginRepository;
@@ -27,55 +33,79 @@ import com.projet.training.services.LoginService;
 @RestController
 @RequestMapping("/crud")
 public class UserController {
-	
+
 	@Autowired
 	private LoginRepository lr;
-	
+
 	@Autowired
 	private LoginService ls;
-	
-	@GetMapping(value="/user" , consumes = "application/json")
-	@CrossOrigin(origins="http://localhost:4200")
+
+	@GetMapping(value = "/user", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:4200")
 	public List<UserDto> listUser() {
-		ArrayList<UserEntity> login = (ArrayList<UserEntity>) lr.findAll();
-		return UserDto.of(login);
+		return lr.findAll().stream().map(UserDto::of).collect(toList());
 	}
 
-    @GetMapping(value = "/user/{id}", produces = "application/json")
-    public ResponseEntity<UserDto> get(@PathVariable int id) {
-        	UserEntity l = ls.findUser(id);
-        	
-            return ResponseEntity.ok(UserDto.of(l));
-    }
-	
-    @PostMapping(value="/user" , consumes = "application/json")
-    @CrossOrigin(origins="http://localhost:4200")
-    public ResponseEntity<UserDto> add( @RequestBody UserEntity l ){
-        try{
-            ls.addUser( l );
-            
-            return ResponseEntity.ok().body(UserDto.of(l));
+	@GetMapping(value = "/user/{id}", produces = "application/json")
+	public ResponseEntity<UserDto> get(@PathVariable Integer id) {
 
-        }catch ( InvalidObjectException e ){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST , e.getMessage() );
-        }
-    }
+		if (id == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
 
-    @PutMapping(value="/user/{id}" , consumes = "application/json")
-    public ResponseEntity<String> update( @PathVariable int id , @RequestBody UserEntity l ) throws InvalidObjectException{
-        try {
-            ls.editUser( id , l );
-            return ResponseEntity.ok().body("Successfully update");
-        }
-        catch( NoSuchElementException e ) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND , "User introuvable" );
-        }
-    }
+		UserEntity l = ls.findUser(id);
 
-    @DeleteMapping(value = "/user/{id}")
-    public ResponseEntity<Object> delete(@PathVariable int id) {
-            ls.delete(id);
-            
-            return ResponseEntity.ok("Successfully deleted");
-    }
+		return ResponseEntity.ok(UserDto.of(l));
+	}
+
+	@PostMapping(value = "/user", consumes = "application/json")
+	@CrossOrigin(origins = "http://localhost:4200")
+	public ResponseEntity<String> add(@RequestBody RegisterDto l) {
+		
+		if(l == null 
+				|| isAnyEmpty(l.getFirstname(), 
+						l.getLastname(), 
+						l.getPassword(), 
+						l.getUsername())
+				|| l.getBirthdate() == null) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
+		
+		try {
+			ls.addUser(UserEntity.of(l));
+
+			return ResponseEntity.ok().body("Register OK");
+
+		} catch (InvalidObjectException e) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+		}
+	}
+
+	@PutMapping(value = "/user/{id}", consumes = "application/json")
+	public ResponseEntity<String> update(@PathVariable int id, @RequestBody UpdateDto l)
+			throws InvalidObjectException {
+		
+		if(l == null 
+				|| (isAllEmpty(l.getFirstname(), 
+						l.getLastname(), 
+						l.getPassword(), 
+						l.getUsername())
+						&& l.getBirthdate() == null)) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+		}
+		
+		try {
+			ls.editUser(id, UserEntity.of(l));
+			return ResponseEntity.ok().body("Successfully update");
+		} catch (NoSuchElementException e) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User introuvable");
+		}
+	}
+
+	@DeleteMapping(value = "/user/{id}")
+	public ResponseEntity<Object> delete(@PathVariable int id) {
+		ls.delete(id);
+
+		return ResponseEntity.ok("Successfully deleted");
+	}
 }

@@ -1,5 +1,8 @@
 package com.projet.training.utils;
 
+import static java.time.LocalDate.ofEpochDay;
+import static org.apache.commons.lang3.RandomStringUtils.random;
+
 import java.time.LocalDate;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
@@ -7,34 +10,21 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RandomInformation {
 	
 	public static String randomString() {
-		String abcd = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-		String randomString = "";
+		Random rd = new Random();
+		String str = random(rd.nextInt(10), true, false);
 		
-		Random rand = new Random();
-		
-		int low = 3;
-		int high = 15;
-		int size = rand.nextInt(high-low) + low;
-		
-		char[] text = new char[size];
-		
-		for(int i = 0; i < size; i++) {
-			text[i] = abcd.charAt(rand.nextInt(abcd.length()));
+		if(str == "" || str == " " || str.length() < 3) {
+			str = randomString();
 		}
-		
-		for(int i = 0; i < text.length; i++) {
-			randomString += text[i];
-		}
-		
-		return randomString;
+		return str;
 	}
 	
 	public static LocalDate randomDate() {
 		long start = LocalDate.of(1970, 1, 1).toEpochDay();
 	    long end = LocalDate.of(2000, 1, 1).toEpochDay();
 	    long randomDay = ThreadLocalRandom.current().nextLong(start, end);
-	    LocalDate randomDate = LocalDate.ofEpochDay(randomDay);
-	    
+	    LocalDate randomDate = ofEpochDay(randomDay);
+
 	    return randomDate;
 	}
 }
